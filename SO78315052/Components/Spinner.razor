@@ -1,0 +1,16 @@
+﻿@if(this.Spin)
+{
+    <div class="m-5 p-5">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+    </div>
+}
+else
+{
+    @this.ChildContent
+}
+
+@code {
+    [Parameter] public bool Spin { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

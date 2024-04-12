@@ -1,0 +1,88 @@
+﻿@page "/weather"
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+<div class="m-2 p-2">
+    <button class="btn btn-primary" @onclick="this.SetSomething">Reset</button>
+</div>
+
+SetSomething()
+@if (!_showContent)
+{
+    <BigSpinner @ref="_spinner" DelayDuration="200" />
+}
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temp. (C)</th>
+            <th>Temp. (F)</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var forecast in forecasts)
+        {
+            <tr>
+                <td>@forecast.Date.ToShortDateString()</td>
+                <td>@forecast.TemperatureC</td>
+                <td>@forecast.TemperatureF</td>
+                <td>@forecast.Summary</td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+
+@code {
+
+    protected BigSpinner _spinner { get; set; } = new();
+    protected bool _showContent = false;
+
+    protected async Task SetSomething()
+    {
+        //_showContent = false;
+        _spinner.Show();
+
+        //await Task.Delay(500);
+
+        _spinner.Hide();
+        _showContent = true;
+    }
+
+    private IEnumerable<WeatherForecast> forecasts = Enumerable.Empty<WeatherForecast>();
+
+    protected override async Task OnInitializedAsync()
+    {
+ //       _showContent = false;
+ //       _spinner.Show();
+
+        // Simulate asynchronous loading to demonstrate a loading indicator
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = startDate.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = summaries[Random.Shared.Next(summaries.Length)]
+            }).ToArray();
+
+//        _spinner.Hide();
+//        _showContent = true;
+    }
+
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}

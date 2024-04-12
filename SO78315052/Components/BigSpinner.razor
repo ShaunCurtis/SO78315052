@@ -1,0 +1,48 @@
+﻿@if (showSpinner)
+{
+    <div class="m-5 p-5">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int DelayDuration { get; set; } = 200;
+    private bool showSpinner = false;
+    private bool isInitialized = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Introduce a delay before showing the spinner
+        await Task.Delay(DelayDuration);
+
+        Show();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            isInitialized = true;
+            Show(); // Show the spinner after initialization
+        }
+    }
+
+    public void Show()
+    {
+        if (isInitialized)
+        {
+            showSpinner = true;
+            StateHasChanged();
+        }
+    }
+
+    public void Hide()
+    {
+        if (isInitialized)
+        {
+            showSpinner = false;
+            StateHasChanged();
+        }
+    }
+}
