@@ -1,0 +1,49 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<Spinner Spin="_loading">
+
+    <h1>Hello, world!</h1>
+
+    Welcome to your new app.
+    
+    <div class="m-2">
+        <button class="btn btn-primary" @onclick="this.OnChangeAsync">Spin Async</button>
+        <button class="btn btn-danger" @onclick="this.OnChange">Spin Sync</button>
+    </div>
+
+</Spinner>
+
+
+@code{
+    private bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        // First render will occur here as we have yielding async code
+        // Fake some async work
+        await Task.Delay(2000);
+        _loading = false;
+    }
+
+    private async Task OnChange()
+    {
+        _loading = true;
+        // Force a yield to update the UI.
+        await Task.Delay(1);
+        // Fake some sync work
+        Thread.Sleep(1000);
+        _loading = false;
+    }
+
+    private async Task OnChangeAsync()
+    {
+        _loading = true;
+        // First render will occur here as we have yielding async code
+        // Fake some async work
+        await Task.Delay(2000);
+        _loading = false;
+    }
+}
